@@ -1,12 +1,57 @@
 ---
-build:
-  capability: pipeline
-  metadata: pipeline.yml
-  env:
-    SAUCE_USER: ${test.parameters.username}
-    SAUCE_KEY: ${test.parameters.key}
-    SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
+name: "Automated integrations with DevOps Services"
+description: "Deploy a copy of a sample app that is managed by a toolchain in IBM® Bluemix® DevOps Services. The toolchain is preconfigured with Sauce Labs and Slack integrations and with DevOps Services features, such as Track & Plan, the Web IDE, the Build & Deploy pipeline, and Git for source control.\n\nTo get started, click **Create**."
+version: 0.1
+required: 
+ - deploy
+ - tutorial-repo
+
+# Github repos
+tutorial-repo:
+  service_id: githubpublic
+  parameters:
+    repo_name: "tutorial-{{name}}"
+    repo_url: https://github.com/oneibmcloud/devops-tutorial-2
+    type: clone
+    has_issues: true
+
+# Pipelines
+tutorial-build:
+  service_id: pipeline
+  parameters:
+    name: "tutorial-{{name}}"
+    ui-pipeline: true
+    configuration: 
+     content: $file(pipeline.yml)
+     env:
+      SAMPLE_REPO: "sample-repo"
+      CF_APP_NAME: "{{deploy.parameters.prod-app-name}}"
+      PROD_SPACE_NAME: "{{deploy.parameters.prod-space}}"
+      PROD_ORG_NAME: "{{deploy.parameters.prod-organization}}"
+      PROD_REGION_ID: "{{deploy.parameters.prod-region}}"
+      SAUCE_USER: ${test.parameters.username}
+      SAUCE_KEY: ${test.parameters.key}
+      SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
+     execute: true
+    services: ["tutorial-repo"]
+  hidden: [form, description]
+
 test:
-  capability: saucelabs
+  service_id: saucelabs
 messaging:
-  capability: slack
+  service_id: slack
+
+#Web IDE
+webide:
+  service_id: orion
+  
+#Deployment
+deploy:
+  schema: 
+    $ref: deploy.json
+  service-category: pipeline
+  parameters:
+    prod-region: "{{region}}"
+    prod-organization: "{{organization}}"
+    prod-space: "{{space}}"
+    prod-app-name: "{{sample-repo.parameters.repo_name}}"

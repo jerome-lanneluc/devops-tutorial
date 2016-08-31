@@ -29,15 +29,14 @@ tutorial-build:
       PROD_SPACE_NAME: "{{deploy.parameters.prod-space}}"
       PROD_ORG_NAME: "{{deploy.parameters.prod-organization}}"
       PROD_REGION_ID: "{{deploy.parameters.prod-region}}"
-      SAUCE_USER: ${test.parameters.username}
-      SAUCE_KEY: ${test.parameters.key}
-      SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
+      SAUCE_LABS: "test"
      execute: true
     services: ["tutorial-repo"]
   hidden: [form, description]
 
 test:
   service_id: saucelabs
+
 messaging:
   service_id: slack
 
@@ -54,4 +53,4 @@ deploy:
     prod-region: "{{region}}"
     prod-organization: "{{organization}}"
     prod-space: "{{space}}"
-    prod-app-name: "{{sample-repo.parameters.repo_name}}"
+    prod-app-name: "{{tutorial-repo.parameters.repo_name}}"

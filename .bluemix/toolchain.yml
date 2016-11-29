@@ -28,12 +28,11 @@ build:
      env:
       GITHUB_REPO: "github-repo"
       CF_APP_NAME: "{{deploy.parameters.tutorial-app-name}}"
-      CF_SPACE_NAME: "{{deploy.parameters.tutorial-space}}"
-      CF_ORG_NAME: "{{deploy.parameters.tutorial-organization}}"
-      CF_REGION_ID: "{{deploy.parameters.tutorial-region}}"
+      BM_SPACE_NAME: "{{deploy.parameters.tutorial-space}}"
+      BM_ORG_NAME: "{{deploy.parameters.tutorial-organization}}"
+      BM_REGION_ID: "{{deploy.parameters.tutorial-region}}"
       SAUCE_USER: ${test.parameters.username}
       SAUCE_KEY: ${test.parameters.key}
-      SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
      execute: true
     services: ["github-repo"]
   hidden: [form, description]

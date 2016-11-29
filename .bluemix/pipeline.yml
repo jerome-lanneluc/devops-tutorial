@@ -1,9 +1,9 @@
 ---
 stages:
   - name: Build
-    inputs:
-      - type: git
-        branch: master
+  - type: git
+      branch: master
+      service: ${GITHUB_REPO}
     triggers:
       - type: commit
     jobs:
@@ -73,10 +73,10 @@ stages:
       - name: Deploy
         type: deployer
         target:
-          url: '${CF_TARGET_URL}'
-          organization: '${CF_ORGANIZATION}'
-          space: '${CF_SPACE}'
-          application: '${CF_APP}'
+          region_id: ${CF_REGION_ID}
+          organization: ${CF_ORG_NAME}
+          space: ${CF_SPACE_NAME}
+          application: ${CF_APP_NAME}
         script: |-
           #!/bin/bash
           cf push "${CF_APP}-test-blue" -n "${CF_APP}-test"
@@ -128,10 +128,10 @@ stages:
       - name: Deploy
         type: deployer
         target:
-          url: '${CF_TARGET_URL}'
-          organization: '${CF_ORGANIZATION}'
-          space: '${CF_SPACE}'
-          application: '${CF_APP}'
+          region_id: ${CF_REGION_ID}
+          organization: ${CF_ORG_NAME}
+          space: ${CF_SPACE_NAME}
+          application: ${CF_APP_NAME}
         script: |-
           #!/bin/bash
           cf push "${CF_APP}-blue" -n "${CF_APP}" --no-start

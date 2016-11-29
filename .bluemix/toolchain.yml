@@ -1,12 +1,62 @@
 ---
+name: "DevOps Tutorial Toolchain"
+description: "[DevOps](https://en.wikipedia.org/wiki/DevOps) is a methodology that aims to improve development and operational efficiencies while enhancing partnership with customers. DevOps is more than doing the same things faster; it establishes a delivery pipeline that spans from ideation to monitoring. \n\nTo start working from a DevOps approach, use the DevOps Tutorial Application project. You'll get a project in [IBM&reg; Bluemix&trade; DevOps Services](https://hub.jazz.net) that is built by using the latest tools, deployed to [IBM Bluemix](https://bluemix.net), and has the foundation for test, scalability, and operations.\n\nThe application is a simple Node.js [Express 4](http://expressjs.com/) sample that you can extend. This sample code is used in a [tutorial](https://method.mybluemix.net/devops/method/tutorials/tutorial_automated) that explains how to configure a toolchain to use for cloud native development in DevOps Services and Bluemix. \n\nTo get started, click **Create**."
+
+required:
+ - deploy
+ - github-repo
+
+toolchain:
+  name: "devops-tutorial-{{timestamp}}"
+
+github-repo:
+  service_id: githubpublic
+  parameters:
+    repo_name: "{{toolchain.name}}"
+    repo_url: https://github.com/skaegi/devops-tutorial-2
+    type: clone
+    has_issues: true
+
+# Pipelines
 build:
-  capability: pipeline
-  metadata: pipeline.yml
-  env:
-    SAUCE_USER: ${test.parameters.username}
-    SAUCE_KEY: ${test.parameters.key}
-    SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
-test:
-  capability: saucelabs
+  service_id: pipeline
+  parameters:
+    name: "{{toolchain.name}}"
+    ui-pipeline: true
+    configuration: 
+     content: $file(pipeline.yml)
+     env:
+      GITHUB_REPO: "github-repo"
+      CF_APP_NAME: "{{deploy.parameters.tutorial-app-name}}"
+      CF_SPACE_NAME: "{{deploy.parameters.tutorial-space}}"
+      CF_ORG_NAME: "{{deploy.parameters.tutorial-organization}}"
+      CF_REGION_ID: "{{deploy.parameters.tutorial-region}}"
+      SAUCE_USER: ${test.parameters.username}
+      SAUCE_KEY: ${test.parameters.key}
+      SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
+     execute: true
+    services: ["github"]
+  hidden: [form, description]
+
+#Slack
 messaging:
-  capability: slack
+  service_id: slack
+
+#Sauce Labs
+test:
+  service_id: saucelabs
+
+#Web IDE
+webide:
+  service_id: orion
+  
+#Deployment
+deploy:
+  schema: 
+    $ref: deploy.json
+  service-category: pipeline
+  parameters:
+    tutorial-region: "{{region}}"
+    tutorial-organization: "{{organization}}"
+    tutorial-space: "{{space}}"
+    tutorial-app-name: "{{toolchain.name}}"

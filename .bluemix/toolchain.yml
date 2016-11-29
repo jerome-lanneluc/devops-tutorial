@@ -35,7 +35,7 @@ build:
       SAUCE_KEY: ${test.parameters.key}
       SLACK_ACCESS_TOKEN: "${messaging.parameters.auth-token}"
      execute: true
-    services: ["github"]
+    services: ["github-repo"]
   hidden: [form, description]
 
 #Slack

@@ -132,7 +132,7 @@ stages:
           region_id: ${BM_REGION_ID}
           organization: ${BM_ORG_NAME}
           space: ${BM_SPACE_NAME}
-          application: ${BM_APP_NAME}
+          application: ${CF_APP_NAME}
         script: |-
           #!/bin/bash
           cf push "${CF_APP}-blue" -n "${CF_APP}" --no-start

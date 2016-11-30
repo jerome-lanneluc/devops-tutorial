@@ -31,8 +31,8 @@ build:
       BM_SPACE_NAME: "{{deploy.parameters.tutorial-space}}"
       BM_ORG_NAME: "{{deploy.parameters.tutorial-organization}}"
       BM_REGION_ID: "{{deploy.parameters.tutorial-region}}"
-      SAUCE_USER: ${test.parameters.username}
-      SAUCE_KEY: ${test.parameters.key}
+      SAUCE_USER: "{{test.parameters.username}}"
+      SAUCE_KEY: "{{test.parameters.key}}"
      execute: true
     services: ["github-repo"]
   hidden: [form, description]

@@ -16,6 +16,7 @@ github-repo:
     repo_url: https://github.com/open-toolchain/devops-tutorial
     type: clone
     has_issues: true
+    enable_traceability: true
 
 # Pipelines
 build:
